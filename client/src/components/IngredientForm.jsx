@@ -11,7 +11,7 @@ const schema = Yup.object().shape({
     price: Yup.number().required("Price is required"),
 });
 
-const IngredientForm = ({onSubmit, defaultValues}) => {
+const IngredientForm = ({onSubmit, defaultValues, onCancel, resetTrigger}) => {
     const {
         register,
         handleSubmit,
@@ -21,7 +21,12 @@ const IngredientForm = ({onSubmit, defaultValues}) => {
 
     React.useEffect(() => {
         reset(defaultValues);
-    }, [defaultValues]);
+    }, [defaultValues, reset]);
+
+    // Reset when told to from parent
+    React.useEffect(() => {
+        if (resetTrigger) reset({ name: "", unit: "", quantity: "", price: "" });
+    }, [resetTrigger, reset]);
 
     return (
         <form
@@ -46,8 +51,17 @@ const IngredientForm = ({onSubmit, defaultValues}) => {
                     <small className="text-danger">{errors.price?.message}</small>
                 </div>
                 <div className="col-auto">
-                    <button type="submit" className="btn btn-success">Save</button>
+                    <button type="submit" className="btn btn-success">
+                        {defaultValues && defaultValues._id ? "Update" : "Add"}
+                    </button>
                 </div>
+                {defaultValues && defaultValues._id && (
+                <div className="col-auto">
+                    <button type="button" className="btn btn-secondary" onClick={onCancel}>
+                        Cancel
+                    </button>
+                </div>
+                )}
             </div>
         </form>
     );
