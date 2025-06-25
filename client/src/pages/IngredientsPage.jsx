@@ -74,7 +74,7 @@ const IngredientsPage = () => {
 
     return (
         <div className="container py-4">
-            <h2>Ingredients</h2>
+            <h2 className="mb-4">Ingredients</h2>
 
             {/* Search form */}
             <form
