@@ -19,8 +19,8 @@ const RecipeEditorPage = () => {
                 // Format it to match the RecipeForm expected structure
                 const ingredients = recipe.ingredients.map((i) => ({
                     ingredientId: i.ingredient,
-                    name: i.name, // assuming you store it
-                    unit: i.unit, // assuming you store it
+                    name: i.name,
+                    unit: i.unit,
                     quantity: i.quantity,
                 }));
                 setDefaultValues({

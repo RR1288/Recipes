@@ -33,6 +33,9 @@ const RecipesPage = () => {
                 return sum + pricePerUnit * item.quantity;
             }, 0);
 
+            console.log(totalCost);
+            
+
             const costPerServing = totalCost / recipe.servings;
             const basePrice = costPerServing * recipe.multiplier;
             const finalPrice = basePrice + recipe.packagingCost;
@@ -107,7 +110,7 @@ const RecipesPage = () => {
 
             <RecipeTable
                 recipes={recipes}
-                onEdit={(recipe) => navigate(`/recipes/edit/${recipe._id}`)}
+                onEdit={(recipe) => navigate(`/recipes/${recipe._id}/edit`)}
                 onDelete={handleDelete}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
