@@ -14,6 +14,7 @@ export const updateIngredient = (id, data) =>
 
 // Recipes
 export const fetchRecipes = (params) => API.get("/recipes", {params});
+export const getRecipe = (id) => API.get(`/recipes/${id}`);
 export const addRecipe = (data) => API.post("/recipes", data);
 export const deleteRecipe = (id) => API.delete(`/recipes/${id}`);
 export const updateRecipe = (id, data) =>

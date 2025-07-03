@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import ToastContainer from "react-bootstrap/esm/ToastContainer";
 import Toast from "react-bootstrap/Toast";
 
-import { deleteRecipe, fetchRecipes } from "../services/api";
+import {deleteRecipe, fetchRecipes} from "../services/api";
 import RecipeTable from "../components/RecipeTable";
-
 
 const RecipesPage = () => {
     const [recipes, setRecipes] = useState([]);
@@ -16,6 +16,8 @@ const RecipesPage = () => {
         type: "success",
     });
 
+    const navigate = useNavigate();
+
     const showToast = (message, type = "success") => {
         setToast({show: true}, message, type);
         setTimeout(
@@ -24,9 +26,29 @@ const RecipesPage = () => {
         );
     };
 
+    const enrichRecipes = (recipes) => {
+        return recipes.map((recipe) => {
+            const totalCost = recipe.ingredients.reduce((sum, item) => {
+                const pricePerUnit = item.ingredient?.pricePerUnit || 0;
+                return sum + pricePerUnit * item.quantity;
+            }, 0);
+
+            const costPerServing = totalCost / recipe.servings;
+            const basePrice = costPerServing * recipe.multiplier;
+            const finalPrice = basePrice + recipe.packagingCost;
+
+            return {
+                ...recipe,
+                cost: costPerServing.toFixed(2),
+                price: finalPrice.toFixed(2),
+            };
+        });
+    };
+
     const loadRecipes = async (search = "") => {
         const res = await fetchRecipes(search ? {search} : {});
-        setRecipes(res);
+        const enriched = enrichRecipes(res.data);
+        setRecipes(enriched);
     };
 
     useEffect(() => {
@@ -51,7 +73,7 @@ const RecipesPage = () => {
     return (
         <div className="container py-4">
             <h2 className="mb-4">Recipes</h2>
-            
+
             {/* Serch form */}
             <form
                 className="row g-2 mb-3"
@@ -67,22 +89,43 @@ const RecipesPage = () => {
                     />
                 </div>
                 <div className="col-auto">
-                    <button type="submit" className="btn btn-primary">Search</button>
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                    >
+                        Search
+                    </button>
                 </div>
             </form>
+            <button
+                type="button"
+                className="btn btn-success"
+                onClick={() => navigate("/recipes/new")}
+            >
+                Add new recipe
+            </button>
 
-            <RecipeTable 
+            <RecipeTable
                 recipes={recipes}
-                onEdit={(recipe) => setEditing(recipe)} // TODO
+                onEdit={(recipe) => navigate(`/recipes/edit/${recipe._id}`)}
                 onDelete={handleDelete}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
             />
 
             {/* Toast Notification  */}
-            <ToastContainer position="bottom-end" className="p-3">
-                <Toast bg={toast.type} show={toast.show} onChange={()=>setToast({show:false})}>
-                    <Toast.Body className="text-white">{toast.message}</Toast.Body>
+            <ToastContainer
+                position="bottom-end"
+                className="p-3"
+            >
+                <Toast
+                    bg={toast.type}
+                    show={toast.show}
+                    onChange={() => setToast({show: false})}
+                >
+                    <Toast.Body className="text-white">
+                        {toast.message}
+                    </Toast.Body>
                 </Toast>
             </ToastContainer>
         </div>

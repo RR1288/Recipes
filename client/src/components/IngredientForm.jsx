@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -19,12 +19,12 @@ const IngredientForm = ({onSubmit, defaultValues, onCancel, resetTrigger}) => {
         formState: {errors},
     } = useForm({defaultValues, resolver: yupResolver(schema)});
 
-    React.useEffect(() => {
+    useEffect(() => {
         reset(defaultValues);
     }, [defaultValues, reset]);
 
     // Reset when told to from parent
-    React.useEffect(() => {
+    useEffect(() => {
         if (resetTrigger) reset({ name: "", unit: "", quantity: "", price: "" });
     }, [resetTrigger, reset]);
 

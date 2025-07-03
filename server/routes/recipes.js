@@ -38,12 +38,12 @@
  *                   type: object
  *                   required:
  *                     - ingredient
- *                     - quantityUsed
+ *                     - quantity
  *                   properties:
  *                     ingredient:
  *                       type: string
  *                       description: Ingredient ID
- *                     quantityUsed:
+ *                     quantity:
  *                       type: number
  *     responses:
  *       201:

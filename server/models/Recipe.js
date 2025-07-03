@@ -3,6 +3,8 @@ const Ingredient = require('./Ingredient');
 
 const RecipeIngredientSchema = new mongoose.Schema({
     ingredient: {type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient', required: true},
+    name: {type: String, required: true},
+    unit: {type: String, required: true},
     quantity: {type: Number, required: true}
 });
 
